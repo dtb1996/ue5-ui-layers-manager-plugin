@@ -1,0 +1,24 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "UI Layers Manager",
+	"Description": "",
+	"Category": "UI",
+	"CreatedBy": "Dillon Bellefeuille",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "UILayersManager",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}

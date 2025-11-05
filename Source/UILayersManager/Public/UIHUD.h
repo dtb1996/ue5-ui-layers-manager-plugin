@@ -4,22 +4,31 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
+#include "GameplayTagContainer.h"
 #include "UIHUD.generated.h"
 
 class UPrimaryLayout;
+class UUILayer;
 
 UCLASS(Abstract)
 class AUIHUD : public AHUD
 {
     GENERATED_BODY()
 
-public:
-    UPROPERTY(EditDefaultsOnly, Category = "UI")
-    TSubclassOf<UPrimaryLayout> LayoutClass;
-
 protected:
-    UPROPERTY()
-    UPrimaryLayout* ActiveLayout;
+	/** Define layers */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
+	TMap<FGameplayTag, TSubclassOf<UUILayer>> LayerDefinitions;
+
+	/** Define optional default widgets */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
+	TMap<FGameplayTag, TSoftClassPtr<UUserWidget>> InitialWidgets;
+
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<UPrimaryLayout> PrimaryLayoutClass;
 
     virtual void BeginPlay() override;
+
+private:
+    UPrimaryLayout* PrimaryLayout;
 };

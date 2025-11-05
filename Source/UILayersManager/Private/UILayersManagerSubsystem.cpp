@@ -1,7 +1,7 @@
 // Copyright 2025, Rolling Pixels. All Rights Reserved.
 
 #include "UILayersManagerSubsystem.h"
-#include "Engine/GameInstance.h"
+//#include "Engine/GameInstance.h"
 #include "UILayer.h"
 #include "Engine/World.h"
 #include "UILayersManager.h"
@@ -15,9 +15,12 @@ UUILayersManagerSubsystem* UUILayersManagerSubsystem::Get(const UObject* WorldCo
 
     if (UWorld* World = WorldContextObject->GetWorld())
     {
-        if (UGameInstance* GI = World->GetGameInstance())
+        if (APlayerController* PC = World->GetFirstPlayerController())
         {
-            return GI->GetSubsystem<UUILayersManagerSubsystem>();
+            if (ULocalPlayer* LP = PC->GetLocalPlayer())
+            {
+                return LP->GetSubsystem<UUILayersManagerSubsystem>();
+            }
         }
     }
 
@@ -43,7 +46,7 @@ UUILayer* UUILayersManagerSubsystem::CreateLayer(FGameplayTag LayerTag, TSubclas
         UUILayer* NewLayer = CreateWidget<UUILayer>(World, LayerClass);
         if (NewLayer)
         {
-            NewLayer->LayerName = LayerTag;
+            NewLayer->LayerTag = LayerTag;
             NewLayer->AddToViewport();
             ActiveLayers.Add(LayerTag, NewLayer);
             UE_LOG(LogUILayersManager, Log, TEXT("Created layer %s"), *LayerTag.ToString());
@@ -55,12 +58,24 @@ UUILayer* UUILayersManagerSubsystem::CreateLayer(FGameplayTag LayerTag, TSubclas
     return nullptr;
 }
 
-void UUILayersManagerSubsystem::PushToLayer(FGameplayTag LayerTag, TSoftClassPtr<UUserWidget> WidgetClass, FOnWidgetLoaded Callback)
+UUserWidget* UUILayersManagerSubsystem::PushToLayer(FGameplayTag LayerTag, TSubclassOf<UUserWidget> WidgetClass)
 {
     UUILayer* Layer = GetLayer(LayerTag);
     if (!Layer)
     {
         UE_LOG(LogUILayersManager, Warning, TEXT("PushToLayer: Layer %s not found"), *LayerTag.ToString());
+        return nullptr;
+    }
+
+    return Layer->PushContent(WidgetClass);
+}
+
+void UUILayersManagerSubsystem::PushToLayerWithCallback(FGameplayTag LayerTag, TSoftClassPtr<UUserWidget> WidgetClass, FOnWidgetLoaded Callback)
+{
+    UUILayer* Layer = GetLayer(LayerTag);
+    if (!Layer)
+    {
+        UE_LOG(LogUILayersManager, Warning, TEXT("PushToLayerWithCallback: Layer %s not found"), *LayerTag.ToString());
         return;
     }
 
@@ -112,7 +127,7 @@ void UUILayersManagerSubsystem::ClearAllLayersExcept(FGameplayTag ExceptionLayer
     {
         UUILayer* Layer = Pair.Value;
 
-        if (!Layer || Layer->LayerName == ExceptionLayerTag)
+        if (!Layer || Layer->LayerTag == ExceptionLayerTag)
         {
             continue;
         }

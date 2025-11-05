@@ -2,29 +2,33 @@
 
 #include "UIHUD.h"
 #include "PrimaryLayout.h"
-#include "UILayersManagerSubsystem.h"
+#include "UILayer.h"
+#include "UILayersManager.h"
 
 void AUIHUD::BeginPlay()
 {
     Super::BeginPlay();
 
-    if (!LayoutClass)
-    {
-        return;
-    }
-
     APlayerController* PC = GetOwningPlayerController();
     if (!PC)
     {
+        UE_LOG(LogUILayersManager, Warning, TEXT("AUIHUD: PlayerController not found"));
         return;
     }
 
-    ActiveLayout = CreateWidget<UPrimaryLayout>(PC, LayoutClass);
-    if (!ActiveLayout)
+    if (!PrimaryLayoutClass)
     {
+        UE_LOG(LogUILayersManager, Warning, TEXT("AUIHUD: PrimaryLayoutClass is not set"));
         return;
     }
 
-    ActiveLayout->AddToViewport();
-    ActiveLayout->InitializeLayout(PC);
+    PrimaryLayout = CreateWidget<UPrimaryLayout>(PC, PrimaryLayoutClass);
+    if (!PrimaryLayout)
+    {
+        UE_LOG(LogUILayersManager, Warning, TEXT("Failed to create PrimaryLayout."));
+        return;
+    }
+
+    PrimaryLayout->InitializeLayout(PC, LayerDefinitions, InitialWidgets);
+    PrimaryLayout->AddToViewport();
 }

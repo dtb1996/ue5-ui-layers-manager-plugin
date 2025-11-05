@@ -5,15 +5,21 @@
 #include "UILayersManagerSubsystem.h"
 #include "UILayersManager.h"
 
-void UPrimaryLayout::InitializeLayout(APlayerController* OwningPlayer)
+void UPrimaryLayout::InitializeLayout(APlayerController* OwningPlayer, TMap<FGameplayTag, TSubclassOf<UUILayer>> LayerDefinitions, TMap<FGameplayTag, TSoftClassPtr<UUserWidget>> InitialWidgets)
 {
     if (!OwningPlayer)
     {
         return;
     }
 
-    UUILayersManagerSubsystem* Subsystem = OwningPlayer->GetGameInstance()->GetSubsystem<UUILayersManagerSubsystem>();
-    if (!Subsystem) 
+    ULocalPlayer* LP = OwningPlayer->GetLocalPlayer();
+    if (!LP)
+    {
+        return;
+    }
+
+    UUILayersManagerSubsystem* Subsystem = LP->GetSubsystem<UUILayersManagerSubsystem>();
+    if (!Subsystem)
     {
         return;
     }
@@ -21,15 +27,12 @@ void UPrimaryLayout::InitializeLayout(APlayerController* OwningPlayer)
     // Create layers
     for (auto& Pair : LayerDefinitions)
     {
-        FGameplayTag LayerTag = Pair.Key;
-        TSubclassOf<UUILayer> LayerClass = Pair.Value;
-
-        if (!LayerClass)
+        if (!Pair.Value)
         {
             continue;
         }
 
-        Subsystem->CreateLayer(LayerTag, LayerClass);
+        Subsystem->CreateLayer(Pair.Key, Pair.Value);
     }
 
     // Push default widgets
@@ -37,7 +40,7 @@ void UPrimaryLayout::InitializeLayout(APlayerController* OwningPlayer)
     {
         if (!Pair.Value.IsNull())
         {
-            Subsystem->PushToLayer(Pair.Key, Pair.Value, FOnWidgetLoaded());
+            Subsystem->PushToLayerWithCallback(Pair.Key, Pair.Value, FOnWidgetLoaded());
         }
     }
 

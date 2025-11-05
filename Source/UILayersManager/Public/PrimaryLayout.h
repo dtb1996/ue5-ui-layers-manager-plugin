@@ -15,15 +15,7 @@ class UILAYERSMANAGER_API UPrimaryLayout : public UUserWidget
     GENERATED_BODY()
 
 public:
-    /** Define layers */
-    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Layout")
-    TMap<FGameplayTag, TSubclassOf<UUILayer>> LayerDefinitions;
-
-    /** Define optional default widgets */
-    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Layout")
-    TMap<FGameplayTag, TSoftClassPtr<UUserWidget>> InitialWidgets;
-
     /** Initialize all layers for a player and push defaults */
     UFUNCTION(BlueprintCallable, Category = "Layout")
-    void InitializeLayout(APlayerController* OwningPlayer);
+    void InitializeLayout(APlayerController* OwningPlayer, TMap<FGameplayTag, TSubclassOf<UUILayer>> LayerDefinitions, TMap<FGameplayTag, TSoftClassPtr<UUserWidget>> InitialWidgets);
 };

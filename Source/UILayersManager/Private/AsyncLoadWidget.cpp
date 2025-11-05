@@ -4,11 +4,14 @@
 #include "Blueprint/UserWidget.h"
 #include "Engine/StreamableManager.h"
 #include "Engine/AssetManager.h"
+#include "UILayersManagerSubsystem.h"
 
-UAsyncLoadWidget* UAsyncLoadWidget::AsyncLoadWidget(UObject* WorldContextObject, TSoftClassPtr<UUserWidget> WidgetClass)
+UAsyncLoadWidget* UAsyncLoadWidget::PushToLayerAsync(APlayerController* OwningPlayer, UObject* WorldContextObject, FGameplayTag LayerTag, TSoftClassPtr<UUserWidget> WidgetClass)
 {
 	UAsyncLoadWidget* AsyncTask = NewObject<UAsyncLoadWidget>();
+	AsyncTask->OwningPlayer = OwningPlayer;
 	AsyncTask->WorldContextObject = WorldContextObject;
+	AsyncTask->LayerTag = LayerTag;
 	AsyncTask->WidgetClassRef = WidgetClass;
 	
 	return AsyncTask;
@@ -24,7 +27,6 @@ void UAsyncLoadWidget::Activate()
 		return;
 	}
 
-	// Try to get a valid world or game instance
 	UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject);
 	if (!World)
 	{
@@ -32,10 +34,10 @@ void UAsyncLoadWidget::Activate()
 		return;
 	}
 
+	// If already loaded, skip async path
 	if (UClass* WidgetClass = WidgetClassRef.Get())
 	{
-		UUserWidget* Widget = CreateWidget<UUserWidget>(World, WidgetClass);
-		OnCompleted.Broadcast(Widget);
+		OnWidgetClassReady(WidgetClass);
 		return;
 	}
 
@@ -45,6 +47,36 @@ void UAsyncLoadWidget::Activate()
 		WidgetClassRef.ToSoftObjectPath(),
 		FStreamableDelegate::CreateUObject(this, &UAsyncLoadWidget::OnWidgetClassLoaded)
 	);
+}
+
+void UAsyncLoadWidget::OnWidgetClassReady(UClass* WidgetClass)
+{
+	if (!OwningPlayer || !WidgetClass)
+	{
+		OnCompleted.Broadcast(nullptr);
+		return;
+	}
+
+	UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject);
+	if (!World)
+	{
+		OnCompleted.Broadcast(nullptr);
+		return;
+	}
+
+	if (ULocalPlayer* LocalPlayer = OwningPlayer->GetLocalPlayer())
+	{
+		if (UUILayersManagerSubsystem* Subsystem = LocalPlayer->GetSubsystem<UUILayersManagerSubsystem>())
+		{
+			UUserWidget* Widget = Subsystem->PushToLayer(LayerTag, WidgetClass);
+			OnCompleted.Broadcast(Widget);
+			return;
+		}
+	}
+
+	// Fallback if subsystem is missing
+	UUserWidget* Widget = CreateWidget<UUserWidget>(World, WidgetClass);
+	OnCompleted.Broadcast(Widget);
 }
 
 void UAsyncLoadWidget::OnWidgetClassLoaded()

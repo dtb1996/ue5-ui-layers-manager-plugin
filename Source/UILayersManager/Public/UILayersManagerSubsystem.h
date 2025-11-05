@@ -3,16 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Subsystems/GameInstanceSubsystem.h"
+#include "Subsystems/LocalPlayerSubsystem.h"
 #include "GameplayTagContainer.h"
+#include "UILayerTypes.h"
 #include "UILayersManagerSubsystem.generated.h"
 
 class UUILayer;
 
-DECLARE_DYNAMIC_DELEGATE_OneParam(FOnWidgetLoaded, UUserWidget*, Widget);
-
 UCLASS()
-class UILAYERSMANAGER_API UUILayersManagerSubsystem : public UGameInstanceSubsystem
+class UILAYERSMANAGER_API UUILayersManagerSubsystem : public ULocalPlayerSubsystem
 {
     GENERATED_BODY()
 
@@ -24,9 +23,13 @@ public:
     UFUNCTION(BlueprintCallable, Category = "UI Layers")
     UUILayer* CreateLayer(FGameplayTag LayerTag, TSubclassOf<UUILayer> LayerClass);
 
+    /** Pushes a widget onto a specific layer */
+    UFUNCTION(BlueprintCallable, Category = "UI Layers")
+    UUserWidget* PushToLayer(FGameplayTag LayerTag, TSubclassOf<UUserWidget> WidgetClass);
+
     /** Pushes a widget onto a specific layer. Includes an optional callback function pin to get a reference to the created widget */
     UFUNCTION(BlueprintCallable, Category = "UI Layers")
-    void PushToLayer(FGameplayTag LayerTag, TSoftClassPtr<UUserWidget> WidgetClass, FOnWidgetLoaded Callback);
+    void PushToLayerWithCallback(FGameplayTag LayerTag, TSoftClassPtr<UUserWidget> WidgetClass, FOnWidgetLoaded Callback);
 
     /** Pops a widget from a specific layer if found */
     UFUNCTION(BlueprintCallable, Category = "UI Layers")

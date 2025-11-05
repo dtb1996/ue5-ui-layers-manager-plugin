@@ -4,6 +4,25 @@
 #include "Components/Border.h"
 #include "UILayersManager.h"
 
+UUserWidget* UUILayer::PushContent(TSubclassOf<UUserWidget> WidgetClass)
+{
+    if (!WidgetClass)
+    {
+        return nullptr;
+    }
+    
+    UUserWidget* CreatedWidget = CreateWidget<UUserWidget>(GetOwningPlayer(), WidgetClass);
+
+    CollapseTop();
+    Border->ClearChildren();
+
+    Stack.Add(CreatedWidget);
+    Border->AddChild(CreatedWidget);
+    ShowTop();
+
+    return CreatedWidget;
+}
+
 void UUILayer::PushContent(TSoftClassPtr<UUserWidget> WidgetClass, FOnWidgetLoaded Callback)
 {
     CallbackRef = Callback;

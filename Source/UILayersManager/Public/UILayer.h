@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "GameplayTagContainer.h"
-#include "UILayersManagerSubsystem.h"
+#include "UILayerTypes.h"
 #include "UILayer.generated.h"
 
 UCLASS(Abstract)
@@ -15,7 +15,9 @@ class UILAYERSMANAGER_API UUILayer : public UUserWidget
 
 public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI Layer")
-    FGameplayTag LayerName;
+    FGameplayTag LayerTag;
+
+    UUserWidget* PushContent(TSubclassOf<UUserWidget> WidgetClass);
 
     UFUNCTION(BlueprintCallable, Category = "UI Layer")
     void PushContent(TSoftClassPtr<UUserWidget> WidgetClass, FOnWidgetLoaded Callback);

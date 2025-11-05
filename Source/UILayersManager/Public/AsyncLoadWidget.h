@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintAsyncActionBase.h"
+#include "GameplayTagContainer.h"
 #include "AsyncLoadWidget.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FLoadCompleted, UUserWidget*, LoadedWidget);
@@ -17,16 +18,16 @@ public:
 	FLoadCompleted OnCompleted;
 	
 	// Factory function
-	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true", WorldContext = "WorldContextObject", Category="UI"))
-	static UAsyncLoadWidget* AsyncLoadWidget(UObject* WorldContextObject, TSoftClassPtr<UUserWidget> WidgetClass);
+	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true", WorldContext = "WorldContextObject", Category="UI Layers|Async"))
+	static UAsyncLoadWidget* PushToLayerAsync(APlayerController* OwningPlayer, UObject* WorldContextObject, FGameplayTag LayerTag, TSoftClassPtr<UUserWidget> WidgetClass);
 
 	virtual void Activate() override;
 private:
-	UPROPERTY()
+	APlayerController* OwningPlayer;
 	UObject* WorldContextObject;
-	
-	UPROPERTY()
+	FGameplayTag LayerTag;
 	TSoftClassPtr<UUserWidget> WidgetClassRef;
 
+	void OnWidgetClassReady(UClass* WidgetClass);
 	void OnWidgetClassLoaded();
 };

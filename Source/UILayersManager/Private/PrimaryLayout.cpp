@@ -37,7 +37,7 @@ void UPrimaryLayout::InitializeLayout(APlayerController* OwningPlayer)
     {
         if (!Pair.Value.IsNull())
         {
-            Subsystem->PushToLayer(Pair.Key, Pair.Value);
+            Subsystem->PushToLayer(Pair.Key, Pair.Value, FOnWidgetLoaded());
         }
     }
 

@@ -55,7 +55,7 @@ UUILayer* UUILayersManagerSubsystem::CreateLayer(FGameplayTag LayerTag, TSubclas
     return nullptr;
 }
 
-void UUILayersManagerSubsystem::PushToLayer(FGameplayTag LayerTag, TSoftClassPtr<UUserWidget> WidgetClass)
+void UUILayersManagerSubsystem::PushToLayer(FGameplayTag LayerTag, TSoftClassPtr<UUserWidget> WidgetClass, FOnWidgetLoaded Callback)
 {
     UUILayer* Layer = GetLayer(LayerTag);
     if (!Layer)
@@ -64,7 +64,7 @@ void UUILayersManagerSubsystem::PushToLayer(FGameplayTag LayerTag, TSoftClassPtr
         return;
     }
 
-    Layer->PushContent(WidgetClass);
+    Layer->PushContent(WidgetClass, Callback);
 }
 
 void UUILayersManagerSubsystem::PopFromLayer(FGameplayTag LayerTag)

@@ -9,6 +9,8 @@
 
 class UUILayer;
 
+DECLARE_DYNAMIC_DELEGATE_OneParam(FOnWidgetLoaded, UUserWidget*, Widget);
+
 UCLASS()
 class UILAYERSMANAGER_API UUILayersManagerSubsystem : public UGameInstanceSubsystem
 {
@@ -22,9 +24,9 @@ public:
     UFUNCTION(BlueprintCallable, Category = "UI Layers")
     UUILayer* CreateLayer(FGameplayTag LayerTag, TSubclassOf<UUILayer> LayerClass);
 
-    /** Pushes a widget onto a specific layer */
+    /** Pushes a widget onto a specific layer. Includes an optional callback function pin to get a reference to the created widget */
     UFUNCTION(BlueprintCallable, Category = "UI Layers")
-    void PushToLayer(FGameplayTag LayerTag, TSoftClassPtr<UUserWidget> WidgetClass);
+    void PushToLayer(FGameplayTag LayerTag, TSoftClassPtr<UUserWidget> WidgetClass, FOnWidgetLoaded Callback);
 
     /** Pops a widget from a specific layer if found */
     UFUNCTION(BlueprintCallable, Category = "UI Layers")

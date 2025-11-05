@@ -2,13 +2,26 @@
 
 #include "UILayer.h"
 #include "Components/Border.h"
+#include "UILayersManager.h"
 
-void UUILayer::PushContent(TSoftClassPtr<UUserWidget> WidgetClass)
+void UUILayer::PushContent(TSoftClassPtr<UUserWidget> WidgetClass, FOnWidgetLoaded Callback)
 {
-    if (!WidgetClass.IsNull())
+    CallbackRef = Callback;
+
+    if (WidgetClass.IsNull())
     {
-        RequestAsyncLoadWidget(WidgetClass);
+        UE_LOG(LogUILayersManager, Error, TEXT("PushContent: WidgetClass is null"));
+
+        if (CallbackRef.IsBound())
+        {
+            CallbackRef.Execute(nullptr);
+            CallbackRef.Clear();
+        }
+
+        return;
     }
+        
+    RequestAsyncLoadWidget(WidgetClass);
 }
 
 void UUILayer::PopContent()
@@ -90,15 +103,17 @@ void UUILayer::OnWidgetLoaded(UUserWidget* LoadedWidget)
         return;
     }
 
-    if (UUserWidget* Top = Peek())
-    {
-        Top->SetVisibility(ESlateVisibility::Collapsed);
-    }
+    CollapseTop();
+    Border->ClearChildren();
 
     Stack.Add(LoadedWidget);
-    Border->ClearChildren();
     Border->AddChild(LoadedWidget);
-
-    LoadedWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+    ShowTop();
+    
+    if (CallbackRef.IsBound())
+    {
+        CallbackRef.Execute(LoadedWidget);
+        CallbackRef.Clear();
+    }
 }
 

@@ -4,11 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "UILayerTypes.h"
 #include "GameplayTagContainer.h"
+#include "UILayersManagerSubsystem.h"
 #include "UILayer.generated.h"
-
-DECLARE_DELEGATE_OneParam(FOnWidgetLoaded, UUserWidget*);
 
 UCLASS(Abstract)
 class UILAYERSMANAGER_API UUILayer : public UUserWidget
@@ -20,7 +18,7 @@ public:
     FGameplayTag LayerName;
 
     UFUNCTION(BlueprintCallable, Category = "UI Layer")
-    void PushContent(TSoftClassPtr<UUserWidget> WidgetClass);
+    void PushContent(TSoftClassPtr<UUserWidget> WidgetClass, FOnWidgetLoaded Callback);
 
     UFUNCTION(BlueprintCallable, Category = "UI Layer")
     void PopContent();
@@ -56,4 +54,7 @@ protected:
     /** Called when async load finishes */
     UFUNCTION(BlueprintCallable, Category = "UI Layer")
     void OnWidgetLoaded(UUserWidget* LoadedWidget);
+
+private:
+    FOnWidgetLoaded CallbackRef;
 };

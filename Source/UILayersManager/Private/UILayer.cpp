@@ -135,4 +135,3 @@ void UUILayer::OnWidgetLoaded(UUserWidget* LoadedWidget)
         CallbackRef.Clear();
     }
 }
-

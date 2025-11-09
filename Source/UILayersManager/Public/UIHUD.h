@@ -7,7 +7,6 @@
 #include "GameplayTagContainer.h"
 #include "UIHUD.generated.h"
 
-class UPrimaryLayout;
 class UUILayer;
 
 UCLASS(Abstract)
@@ -24,11 +23,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
 	TMap<FGameplayTag, TSoftClassPtr<UUserWidget>> InitialWidgets;
 
-	UPROPERTY(EditDefaultsOnly, Category = "UI")
-	TSubclassOf<UPrimaryLayout> PrimaryLayoutClass;
-
     virtual void BeginPlay() override;
 
 private:
-    UPrimaryLayout* PrimaryLayout;
+	void InitializeLayout();
 };

@@ -7,7 +7,7 @@ A lightweight Unreal Engine plugin for managing layered UI systems with async wi
 - Centralized UI management via `UUILayersManagerSubsystem`
 - Support for multiple UI layers (game, menu, modals, etc.)
 - Async widget loading and soft references
-- Easily integrated with `UPrimaryLayout` and `AUIHUD`
+- Easily integrated with `AUIHUD`
 
 ## Installation
 

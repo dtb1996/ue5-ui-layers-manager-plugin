@@ -17,6 +17,5 @@ A lightweight Unreal Engine plugin for managing layered UI systems with async wi
 
 ## Example Setup
 
-- Add a `PrimaryLayout` widget with layer definitions.
-- In your HUD, spawn and initialize the layout.
+- In your HUD, setup ayer definitions and add any optional default widgets.
 - Use the subsystem to `PushToLayer()` and `PopFromLayer()` as needed.

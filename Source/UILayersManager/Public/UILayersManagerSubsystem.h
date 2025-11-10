@@ -5,8 +5,9 @@
 #include "CoreMinimal.h"
 #include "Subsystems/LocalPlayerSubsystem.h"
 #include "GameplayTagContainer.h"
-#include "UILayerTypes.h"
 #include "UILayersManagerSubsystem.generated.h"
+
+DECLARE_DYNAMIC_DELEGATE_OneParam(FOnWidgetLoaded, UUserWidget*, Widget);
 
 class UUILayer;
 

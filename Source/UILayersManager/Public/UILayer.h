@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "GameplayTagContainer.h"
-#include "UILayerTypes.h"
+#include "UILayersManagerSubsystem.h"
 #include "UILayer.generated.h"
 
 UCLASS(Abstract)

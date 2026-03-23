@@ -31,6 +31,7 @@ void AUIHUD::InitializeLayout()
     UUILayersManagerSubsystem* Subsystem = LP->GetSubsystem<UUILayersManagerSubsystem>();
     if (!Subsystem)
     {
+        UE_LOG(LogUILayersManager, Warning, TEXT("InitializeLayout: Subsystem missing"));
         return;
     }
 

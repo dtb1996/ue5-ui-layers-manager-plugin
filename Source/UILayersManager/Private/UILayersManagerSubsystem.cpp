@@ -26,7 +26,7 @@ UUILayersManagerSubsystem* UUILayersManagerSubsystem::Get(const UObject* WorldCo
     return nullptr;
 }
 
-UUILayer* UUILayersManagerSubsystem::CreateLayer(FGameplayTag LayerTag, TSubclassOf<UUILayer> LayerClass)
+UUILayer* UUILayersManagerSubsystem::CreateLayer(const FGameplayTag& LayerTag, TSubclassOf<UUILayer> LayerClass)
 {
     if (!LayerClass)
     {
@@ -57,7 +57,7 @@ UUILayer* UUILayersManagerSubsystem::CreateLayer(FGameplayTag LayerTag, TSubclas
     return nullptr;
 }
 
-UUserWidget* UUILayersManagerSubsystem::PushToLayer(FGameplayTag LayerTag, TSubclassOf<UUserWidget> WidgetClass)
+UUserWidget* UUILayersManagerSubsystem::PushToLayer(const FGameplayTag& LayerTag, TSubclassOf<UUserWidget> WidgetClass)
 {
     UUILayer* Layer = GetLayer(LayerTag);
     if (!Layer)
@@ -69,7 +69,7 @@ UUserWidget* UUILayersManagerSubsystem::PushToLayer(FGameplayTag LayerTag, TSubc
     return Layer->PushContent(WidgetClass);
 }
 
-void UUILayersManagerSubsystem::PushToLayerWithCallback(FGameplayTag LayerTag, TSoftClassPtr<UUserWidget> WidgetClass, FOnWidgetLoaded Callback)
+void UUILayersManagerSubsystem::PushToLayerWithCallback(const FGameplayTag& LayerTag, const TSoftClassPtr<UUserWidget>& WidgetClass, FOnWidgetLoaded Callback)
 {
     UUILayer* Layer = GetLayer(LayerTag);
     if (!Layer)
@@ -81,7 +81,7 @@ void UUILayersManagerSubsystem::PushToLayerWithCallback(FGameplayTag LayerTag, T
     Layer->PushContent(WidgetClass, Callback);
 }
 
-void UUILayersManagerSubsystem::PopFromLayer(FGameplayTag LayerTag)
+void UUILayersManagerSubsystem::PopFromLayer(const FGameplayTag& LayerTag)
 {
     UUILayer* Layer = GetLayer(LayerTag);
     if (!Layer)
@@ -93,7 +93,7 @@ void UUILayersManagerSubsystem::PopFromLayer(FGameplayTag LayerTag)
     Layer->PopContent();
 }
 
-void UUILayersManagerSubsystem::ClearLayer(FGameplayTag LayerTag)
+void UUILayersManagerSubsystem::ClearLayer(const FGameplayTag& LayerTag)
 {
     UUILayer* Layer = GetLayer(LayerTag);
     if (!Layer)
@@ -120,7 +120,7 @@ void UUILayersManagerSubsystem::ClearAllLayers()
     }
 }
 
-void UUILayersManagerSubsystem::ClearAllLayersExcept(FGameplayTag ExceptionLayerTag)
+void UUILayersManagerSubsystem::ClearAllLayersExcept(const FGameplayTag& ExceptionLayerTag)
 {
     for (auto& Pair : ActiveLayers)
     {
@@ -135,7 +135,7 @@ void UUILayersManagerSubsystem::ClearAllLayersExcept(FGameplayTag ExceptionLayer
     }
 }
 
-UUILayer* UUILayersManagerSubsystem::GetLayer(FGameplayTag LayerTag) const
+UUILayer* UUILayersManagerSubsystem::GetLayer(const FGameplayTag& LayerTag) const
 {
     if (UUILayer* const* Found = ActiveLayers.Find(LayerTag))
     {
@@ -145,7 +145,7 @@ UUILayer* UUILayersManagerSubsystem::GetLayer(FGameplayTag LayerTag) const
     return nullptr;
 }
 
-void UUILayersManagerSubsystem::RemoveLayer(FGameplayTag LayerTag)
+void UUILayersManagerSubsystem::RemoveLayer(const FGameplayTag& LayerTag)
 {
     if (UUILayer* Layer = GetLayer(LayerTag))
     {

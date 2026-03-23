@@ -19,12 +19,11 @@ public:
 	
 	// Factory function
 	UFUNCTION(BlueprintCallable, meta = (BlueprintInternalUseOnly = "true", WorldContext = "WorldContextObject", Category="UI Layers|Async"))
-	static UAsyncLoadWidget* PushToLayerAsync(APlayerController* OwningPlayer, UObject* WorldContextObject, FGameplayTag LayerTag, TSoftClassPtr<UUserWidget> WidgetClass);
+	static UAsyncLoadWidget* PushToLayerAsync(APlayerController* OwningPlayer, const FGameplayTag& LayerTag, TSoftClassPtr<UUserWidget> WidgetClass);
 
 	virtual void Activate() override;
 private:
-	APlayerController* OwningPlayer;
-	UObject* WorldContextObject;
+	TWeakObjectPtr<APlayerController> OwningPlayer;
 	FGameplayTag LayerTag;
 	TSoftClassPtr<UUserWidget> WidgetClassRef;
 

@@ -22,23 +22,23 @@ public:
 
     /** Create or retrieve a layer */
     UFUNCTION(BlueprintCallable, Category = "UI Layers")
-    UUILayer* CreateLayer(FGameplayTag LayerTag, TSubclassOf<UUILayer> LayerClass);
+    UUILayer* CreateLayer(const FGameplayTag& LayerTag, TSubclassOf<UUILayer> LayerClass);
 
     /** Pushes a widget onto a specific layer */
     UFUNCTION(BlueprintCallable, Category = "UI Layers")
-    UUserWidget* PushToLayer(FGameplayTag LayerTag, TSubclassOf<UUserWidget> WidgetClass);
+    UUserWidget* PushToLayer(const FGameplayTag& LayerTag, TSubclassOf<UUserWidget> WidgetClass);
 
     /** Pushes a widget onto a specific layer. Includes an optional callback function pin to get a reference to the created widget */
     UFUNCTION(BlueprintCallable, Category = "UI Layers")
-    void PushToLayerWithCallback(FGameplayTag LayerTag, TSoftClassPtr<UUserWidget> WidgetClass, FOnWidgetLoaded Callback);
+    void PushToLayerWithCallback(const FGameplayTag& LayerTag, const TSoftClassPtr<UUserWidget>& WidgetClass, FOnWidgetLoaded Callback);
 
     /** Pops a widget from a specific layer if found */
     UFUNCTION(BlueprintCallable, Category = "UI Layers")
-    void PopFromLayer(FGameplayTag LayerTag);
+    void PopFromLayer(const FGameplayTag& LayerTag);
 
     /** Clears all widgets in a specific layer if found */
     UFUNCTION(BlueprintCallable, Category = "UI Layers")
-    void ClearLayer(FGameplayTag LayerTag);
+    void ClearLayer(const FGameplayTag& LayerTag);
 
     /** Clears all widgets all found layers */
     UFUNCTION(BlueprintCallable, Category = "UI Layers")
@@ -46,15 +46,15 @@ public:
 
     /** Clears all widgets in all layers except the one specified */
     UFUNCTION(BlueprintCallable, Category = "UI Layers")
-    void ClearAllLayersExcept(FGameplayTag ExceptionLayerTag);
+    void ClearAllLayersExcept(const FGameplayTag& ExceptionLayerTag);
 
     /** Retrieve an existing layer */
     UFUNCTION(BlueprintCallable, Category = "UI Layers")
-    UUILayer* GetLayer(FGameplayTag LayerTag) const;
+    UUILayer* GetLayer(const FGameplayTag& LayerTag) const;
 
     /** Remove a layer */
     UFUNCTION(BlueprintCallable, Category = "UI Layers")
-    void RemoveLayer(FGameplayTag LayerTag);
+    void RemoveLayer(const FGameplayTag& LayerTag);
 
 private:
     /** All active layers, keyed by tag */

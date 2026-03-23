@@ -6,11 +6,10 @@
 #include "Engine/AssetManager.h"
 #include "UILayersManagerSubsystem.h"
 
-UAsyncLoadWidget* UAsyncLoadWidget::PushToLayerAsync(APlayerController* OwningPlayer, UObject* WorldContextObject, FGameplayTag LayerTag, TSoftClassPtr<UUserWidget> WidgetClass)
+UAsyncLoadWidget* UAsyncLoadWidget::PushToLayerAsync(APlayerController* OwningPlayer, const FGameplayTag& LayerTag, TSoftClassPtr<UUserWidget> WidgetClass)
 {
 	UAsyncLoadWidget* AsyncTask = NewObject<UAsyncLoadWidget>();
 	AsyncTask->OwningPlayer = OwningPlayer;
-	AsyncTask->WorldContextObject = WorldContextObject;
 	AsyncTask->LayerTag = LayerTag;
 	AsyncTask->WidgetClassRef = WidgetClass;
 	
@@ -21,14 +20,7 @@ void UAsyncLoadWidget::Activate()
 {
 	Super::Activate();
 
-	if (!WorldContextObject || !WidgetClassRef.IsValid())
-	{
-		OnCompleted.Broadcast(nullptr);
-		return;
-	}
-
-	UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject);
-	if (!World)
+	if (!OwningPlayer.IsValid() || !WidgetClassRef.IsValid())
 	{
 		OnCompleted.Broadcast(nullptr);
 		return;
@@ -51,20 +43,20 @@ void UAsyncLoadWidget::Activate()
 
 void UAsyncLoadWidget::OnWidgetClassReady(UClass* WidgetClass)
 {
-	if (!OwningPlayer || !WidgetClass)
+	if (!OwningPlayer.IsValid() || !WidgetClass)
 	{
 		OnCompleted.Broadcast(nullptr);
 		return;
 	}
 
-	UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject);
-	if (!World)
+	APlayerController* PC = OwningPlayer.Get();
+	if (!PC)
 	{
 		OnCompleted.Broadcast(nullptr);
 		return;
 	}
 
-	if (ULocalPlayer* LocalPlayer = OwningPlayer->GetLocalPlayer())
+	if (ULocalPlayer* LocalPlayer = PC->GetLocalPlayer())
 	{
 		if (UUILayersManagerSubsystem* Subsystem = LocalPlayer->GetSubsystem<UUILayersManagerSubsystem>())
 		{
@@ -75,14 +67,13 @@ void UAsyncLoadWidget::OnWidgetClassReady(UClass* WidgetClass)
 	}
 
 	// Fallback if subsystem is missing
-	UUserWidget* Widget = CreateWidget<UUserWidget>(World, WidgetClass);
+	UUserWidget* Widget = CreateWidget<UUserWidget>(PC, WidgetClass);
 	OnCompleted.Broadcast(Widget);
 }
 
 void UAsyncLoadWidget::OnWidgetClassLoaded()
 {
-	UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject);
-	if (!World)
+	if (!OwningPlayer.IsValid())
 	{
 		OnCompleted.Broadcast(nullptr);
 		return;
@@ -90,8 +81,7 @@ void UAsyncLoadWidget::OnWidgetClassLoaded()
 
 	if (UClass* WidgetClass = WidgetClassRef.Get())
 	{
-		UUserWidget* Widget = CreateWidget<UUserWidget>(World, WidgetClass);
-		OnCompleted.Broadcast(Widget);
+		OnWidgetClassReady(WidgetClass);
 	}
 	else
 	{

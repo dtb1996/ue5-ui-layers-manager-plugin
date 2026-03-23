@@ -20,7 +20,7 @@ public:
     UUserWidget* PushContent(TSubclassOf<UUserWidget> WidgetClass);
 
     UFUNCTION(BlueprintCallable, Category = "UI Layer")
-    void PushContent(TSoftClassPtr<UUserWidget> WidgetClass, FOnWidgetLoaded Callback);
+    void PushContent(const TSoftClassPtr<UUserWidget>& WidgetClass, FOnWidgetLoaded Callback);
 
     UFUNCTION(BlueprintCallable, Category = "UI Layer")
     void PopContent();

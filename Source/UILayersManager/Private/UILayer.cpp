@@ -8,6 +8,7 @@ UUserWidget* UUILayer::PushContent(TSubclassOf<UUserWidget> WidgetClass)
 {
     if (!WidgetClass)
     {
+        UE_LOG(LogUILayersManager, Warning, TEXT("PushContent: WidgetClass is null"));
         return nullptr;
     }
     
@@ -23,7 +24,7 @@ UUserWidget* UUILayer::PushContent(TSubclassOf<UUserWidget> WidgetClass)
     return CreatedWidget;
 }
 
-void UUILayer::PushContent(TSoftClassPtr<UUserWidget> WidgetClass, FOnWidgetLoaded Callback)
+void UUILayer::PushContent(const TSoftClassPtr<UUserWidget>& WidgetClass, FOnWidgetLoaded Callback)
 {
     CallbackRef = Callback;
 

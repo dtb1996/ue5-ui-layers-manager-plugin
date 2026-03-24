@@ -10,7 +10,7 @@
 class UUILayer;
 
 UCLASS(Abstract)
-class AUIHUD : public AHUD
+class UILAYERSMANAGER_API AUIHUD : public AHUD
 {
     GENERATED_BODY()
 

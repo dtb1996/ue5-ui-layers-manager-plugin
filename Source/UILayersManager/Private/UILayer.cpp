@@ -13,6 +13,11 @@ UUserWidget* UUILayer::PushContent(TSubclassOf<UUserWidget> WidgetClass)
     }
     
     UUserWidget* CreatedWidget = CreateWidget<UUserWidget>(GetOwningPlayer(), WidgetClass);
+    if (!CreatedWidget)
+    {
+        UE_LOG(LogUILayersManager, Warning, TEXT("PushContent: CreatedWidget is null"));
+        return nullptr;
+    }
 
     CollapseTop();
     Border->ClearChildren();

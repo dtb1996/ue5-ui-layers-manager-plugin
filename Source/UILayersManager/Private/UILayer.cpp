@@ -30,7 +30,7 @@ void UUILayer::PushContent(const TSoftClassPtr<UUserWidget>& WidgetClass, FOnWid
 
     if (WidgetClass.IsNull())
     {
-        UE_LOG(LogUILayersManager, Error, TEXT("PushContent: WidgetClass is null"));
+        UE_LOG(LogUILayersManager, Warning, TEXT("PushContent: WidgetClass is null"));
 
         if (CallbackRef.IsBound())
         {

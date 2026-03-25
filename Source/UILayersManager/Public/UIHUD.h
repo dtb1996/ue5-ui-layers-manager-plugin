@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
 #include "GameplayTagContainer.h"
+#include "Blueprint/UserWidget.h"
 #include "UIHUD.generated.h"
 
 class UUILayer;

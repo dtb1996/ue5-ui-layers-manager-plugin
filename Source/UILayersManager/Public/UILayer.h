@@ -40,6 +40,7 @@ public:
     UFUNCTION(BlueprintCallable, Category = "UI Layer")
     FText GetStackListNames() const;
 
+    UFUNCTION(BlueprintCallable, Category = "UI Layer")
     bool IsEmpty() const;
 
 protected:

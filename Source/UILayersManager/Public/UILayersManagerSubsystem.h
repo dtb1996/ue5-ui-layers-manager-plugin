@@ -56,6 +56,10 @@ public:
     UFUNCTION(BlueprintCallable, Category = "UI Layers")
     void RemoveLayer(const FGameplayTag& LayerTag);
 
+    /** Remove all layers */
+    UFUNCTION(BlueprintCallable, Category = "UI Layers")
+    void RemoveAllLayers();
+
 private:
     /** All active layers, keyed by tag */
     UPROPERTY(Transient)

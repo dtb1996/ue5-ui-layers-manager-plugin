@@ -35,6 +35,11 @@ void AUIHUD::InitializeLayout()
         return;
     }
 
+    if (bResetLayersOnBeginPlay)
+    {
+        Subsystem->RemoveAllLayers();
+	}
+
     // Create layers
     for (auto& Pair : LayerDefinitions)
     {

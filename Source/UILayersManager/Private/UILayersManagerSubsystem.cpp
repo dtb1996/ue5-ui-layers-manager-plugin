@@ -154,3 +154,19 @@ void UUILayersManagerSubsystem::RemoveLayer(const FGameplayTag& LayerTag)
         UE_LOG(LogUILayersManager, Log, TEXT("Removed layer %s"), *LayerTag.ToString());
     }
 }
+
+void UUILayersManagerSubsystem::RemoveAllLayers()
+{
+    for (auto& Pair : ActiveLayers)
+    {
+        UUILayer* Layer = Pair.Value;
+        if (!Layer)
+        {
+            continue;
+        }
+        Layer->RemoveFromParent();
+        UE_LOG(LogUILayersManager, Log, TEXT("Removed layer %s"), *Pair.Key.ToString());
+    }
+
+	ActiveLayers.Empty();
+}

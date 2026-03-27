@@ -24,6 +24,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
 	TMap<FGameplayTag, TSoftClassPtr<UUserWidget>> InitialWidgets;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
+	bool bResetLayersOnBeginPlay = true;
+
     virtual void BeginPlay() override;
 
 private:
